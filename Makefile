@@ -1,5 +1,5 @@
 postgres:
-	docker run --name postgres -p 5436:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=123456 -d postgres
+	docker run --name postgres --network bank-network -p 5436:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=123456 -d postgres
 
 createdb:
 	docker exec -it postgres createdb --username=postgres --owner=postgres postgres
@@ -8,10 +8,10 @@ dropdb:
 	docker exec -it postgres dropdb simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgresql://postgres:123456@localhost:5436/postgres?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://postgres:postgres@simple-bank.cvmuwkm0aohe.eu-north-1.rds.amazonaws.com:5432/simple_bank" -verbose up
 
 migratedown:
-	migrate -path db/migration -database "postgresql://postgres:123456@localhost:5436/postgres?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://postgres:postgres@simple-bank.cvmuwkm0aohe.eu-north-1.rds.amazonaws.com:5432/simple_bank" -verbose down
 
 sqlc:
 	sqlc generate
